@@ -183,20 +183,9 @@ class AbstractAtom extends Renderer\AbstractRenderer
     protected function _setFeedLinks(DOMDocument $dom, DOMElement $root)
     {
         $flinks = $this->getDataContainer()->getFeedLinks();
-        if(!$flinks || !array_key_exists('atom', $flinks)) {
-            $message = 'Atom 1.0 feed elements SHOULD contain one atom:link '
-            . 'element with a rel attribute value of "self".  This is the '
-            . 'preferred URI for retrieving Atom Feed Documents representing '
-            . 'this Atom feed but a feed link has not been set';
-            $exception = new Writer\Exception\InvalidArgumentException($message);
-            if (!$this->_ignoreExceptions) {
-                throw $exception;
-            } else {
-                $this->_exceptions[] = $exception;
-                return;
-            }
+        if(!$flinks || empty($flinks)) {
+            return;
         }
-
         foreach ($flinks as $type => $href) {
             $mime = 'application/' . strtolower($type) . '+xml';
             $flink = $dom->createElement('link');

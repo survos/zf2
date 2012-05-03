@@ -98,4 +98,35 @@ class Atom extends AbstractAtom implements Renderer\RendererInterface
         return $this;
     }
 
+    /**
+     * Set feed links
+     *
+     * @param  \DOMDocument $dom
+     * @param  \DOMElement $root
+     * @return void
+     */
+    protected function _setFeedLinks(\DOMDocument $dom, \DOMElement $root)
+    {
+        $flinks = $this->getDataContainer()->getFeedLinks();
+        if(!$flinks || !array_key_exists('atom', $flinks)) {
+            $message = 'Atom 1.0 feed elements SHOULD contain one atom:link '
+                . 'element with a rel attribute value of "self".  This is the '
+                . 'preferred URI for retrieving Atom Feed Documents representing '
+                . 'this Atom feed but a feed link has not been set';
+            $exception = new Writer\Exception($message);
+            if (!$this->_ignoreExceptions) {
+                throw $exception;
+            } else {
+                $this->_exceptions[] = $exception;
+                return;
+            }
+        }
+
+        if (!$this->getDataContainer()->getId()) {
+            $this->getDataContainer()->setId(
+                $this->getDataContainer()->getLink());
+        }
+
+        parent::_setFeedLinks($dom, $root);
+    }
 }

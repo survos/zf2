@@ -51,6 +51,13 @@ class AtomTest extends \PHPUnit_Framework_TestCase
                                             'email'=> 'jane@example.com',
                                             'uri'  => 'http://www.example.com/jane'));
         $this->_validEntry->setContent('<p class="xhtml:">This is test content for <em>xhtml:</em></p>');
+
+        $source = $this->_validEntry->createSource();
+        $source->setTitle('Test source');
+        $source->setDateModified(1234567890);
+        $source->setId('urn:test-source');
+        $this->_validEntry->setSource($source);
+
         $this->_validWriter->addEntry($this->_validEntry);
     }
 
